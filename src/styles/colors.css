@@ -1,0 +1,64 @@
+/*
+ * 컬러 팔레트 디자인 시스템
+ * 출처: "컬러 팔레트 디자인 시스템.md" (네이버 naver.com 디자인 토큰 기반)
+ */
+
+:root {
+  /* Primary Colors */
+  --color-primary: #03C75A;
+  --color-primary-light: #29CF73;
+  --color-primary-dark: #00893D;
+
+  /* Secondary Colors */
+  --color-secondary: #3283FD;
+  --color-accent: #F4361E;
+
+  /* Background Colors */
+  --color-bg-primary: #FFFFFF;
+  --color-bg-secondary: #EDF0F4;
+
+  /* Text Colors */
+  --color-text-primary: #000000;
+  --color-text-secondary: #2E2E2E;
+  --color-text-muted: #737373;
+
+  /* Interactive Colors */
+  --color-button-primary: #03C75A;
+  --color-button-hover: #03A94D;
+  --color-link: #0C43B7;
+  --color-link-hover: #3283FD;
+
+  /* 확장 변수 */
+  --color-bg-raised: #F8F9FA;
+  --color-primary-subtle: #B3EECD;
+  --color-border-divider: rgba(0, 0, 0, 0.08);
+  --color-border-default: rgba(0, 0, 0, 0.15);
+  --color-button-active: #00893D;
+  --color-hover-layer: rgba(0, 0, 0, 0.06);
+}
+
+/* 다크모드: 시스템 설정 따르기 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-primary-light: #29CF73;
+    --color-primary-dark: #089145;
+    --color-secondary: #5196FD;
+
+    --color-bg-primary: #1F1F1F;
+    --color-bg-secondary: #131313;
+
+    --color-text-primary: #F8F8F8;
+    --color-text-secondary: #E7E7E7;
+    --color-text-muted: #CDCDCD;
+
+    --color-button-hover: #29CF73;
+    --color-link: #5FA5F8;
+    --color-link-hover: #70A8FE;
+
+    --color-bg-raised: #2D2D2D;
+    --color-primary-subtle: #0E4928;
+    --color-border-divider: rgba(255, 255, 255, 0.08);
+    --color-border-default: rgba(255, 255, 255, 0.15);
+    --color-hover-layer: rgba(255, 255, 255, 0.06);
+  }
+}
