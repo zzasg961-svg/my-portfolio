@@ -44,11 +44,7 @@ function ContactSection() {
 
           <Divider sx={{ borderColor: 'var(--color-border-divider)' }} />
 
-          <SectionHeading
-            eyebrow="GUESTBOOK"
-            title={`방명록${entries.length ? ` ${entries.length}` : ''}`}
-            as="h3"
-          />
+          <SectionHeading eyebrow="GUESTBOOK" title="방명록" as="h3" />
 
           {!isConfigured && (
             <Alert severity="info" sx={{ borderRadius: 3 }}>
@@ -58,7 +54,28 @@ function ContactSection() {
 
           <GuestbookForm onSubmit={addEntry} isDisabled={!isConfigured} />
 
-          {isConfigured && <GuestbookList entries={entries} isLoading={isLoading} error={error} />}
+          {isConfigured && (
+            <Box>
+              {entries.length > 0 && (
+                <Box
+                  sx={{
+                    mb: 1.5,
+                    pb: 1.5,
+                    fontSize: '0.875rem',
+                    color: 'var(--color-text-muted)',
+                    borderBottom: '1px solid var(--color-border-divider)',
+                  }}
+                >
+                  남겨진 메시지{' '}
+                  <Box component="strong" sx={{ color: 'var(--color-text-primary)', fontWeight: 700 }}>
+                    {entries.length}
+                  </Box>
+                  개
+                </Box>
+              )}
+              <GuestbookList entries={entries} isLoading={isLoading} error={error} />
+            </Box>
+          )}
         </Stack>
       </CardContent>
     </Card>
