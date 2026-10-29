@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Box,
@@ -12,7 +12,9 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { createBurstParticles } from '../../utils/create-burst-particles';
 import { AGE_GROUPS, REFERRAL_SOURCES } from './contact-data';
+import RatingBurst, { BURST_DURATION, starPop } from './rating-burst';
 
 const MESSAGE_MAX = 500;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -20,7 +22,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const INITIAL_FORM = {
   name: '',
   message: '',
-  rating: 5,
+  rating: null,
   email: '',
   phone: '',
   sns: '',
@@ -75,6 +77,10 @@ function GuestbookForm({ onSubmit, isDisabled = false }) {
   const [isExtraOpen, setIsExtraOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState(null);
+  const [burst, setBurst] = useState(null);
+  const burstTimerRef = useRef(null);
+
+  useEffect(() => () => clearTimeout(burstTimerRef.current), []);
 
   const emailError = form.email.trim() !== '' && !EMAIL_PATTERN.test(form.email.trim());
   const canSubmit =
@@ -82,6 +88,16 @@ function GuestbookForm({ onSubmit, isDisabled = false }) {
 
   const handleChange = (field) => (event) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }));
+  };
+
+  /** 5점을 고른 순간에만 폭죽을 터뜨립니다. 다시 눌러도 매번 새로 터집니다. */
+  const handleRatingChange = (_, value) => {
+    setForm((prev) => ({ ...prev, rating: value }));
+    if (value !== 5) return;
+
+    clearTimeout(burstTimerRef.current);
+    setBurst({ id: Date.now(), particles: createBurstParticles() });
+    burstTimerRef.current = setTimeout(() => setBurst(null), BURST_DURATION + 150);
   };
 
   const handleSubmit = async (event) => {
@@ -135,15 +151,29 @@ function GuestbookForm({ onSubmit, isDisabled = false }) {
           <Box sx={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>
             별점
           </Box>
-          <Rating
-            value={form.rating}
-            onChange={(_, value) => setForm((prev) => ({ ...prev, rating: value }))}
-            disabled={isDisabled}
+          <Box
             sx={{
-              '& .MuiRating-iconFilled': { color: 'var(--color-text-primary)' },
-              '& .MuiRating-iconEmpty': { color: 'var(--color-border-default)' },
+              position: 'relative',
+              display: 'inline-flex',
+              '& .MuiRating-iconFilled': burst
+                ? { animation: `${starPop} 450ms ease-out` }
+                : undefined,
+              '@media (prefers-reduced-motion: reduce)': {
+                '& .MuiRating-iconFilled': { animation: 'none' },
+              },
             }}
-          />
+          >
+            <Rating
+              value={form.rating}
+              onChange={handleRatingChange}
+              disabled={isDisabled}
+              sx={{
+                '& .MuiRating-iconFilled': { color: 'var(--color-text-primary)' },
+                '& .MuiRating-iconEmpty': { color: 'var(--color-border-default)' },
+              }}
+            />
+            {burst && <RatingBurst key={burst.id} particles={burst.particles} />}
+          </Box>
         </Box>
 
         <Button
