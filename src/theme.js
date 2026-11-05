@@ -25,12 +25,32 @@ const theme = createTheme({
       textTransform: 'none',
     },
   },
+  // 둥글기 단위 4px: sx의 borderRadius: 3 → 12px, 4 → 16px
+  // (값이 너무 크면 요소가 알약 모양이 되어 글자가 가장자리에 붙어 보입니다)
   shape: {
-    borderRadius: 12,
+    borderRadius: 4,
   },
   components: {
+    MuiCard: {
+      styleOverrides: {
+        root: { borderRadius: 16 },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        label: { paddingLeft: 10, paddingRight: 10 },
+        labelSmall: { paddingLeft: 10, paddingRight: 10 },
+      },
+    },
+    MuiAlert: {
+      styleOverrides: {
+        root: { borderRadius: 12, paddingLeft: 16, paddingRight: 16 },
+      },
+    },
     MuiButton: {
       styleOverrides: {
+        root: { borderRadius: 10, paddingLeft: 16, paddingRight: 16 },
+        sizeSmall: { paddingLeft: 12, paddingRight: 12 },
         containedPrimary: {
           backgroundColor: 'var(--color-button-primary)',
           '&:hover': { backgroundColor: 'var(--color-button-hover)' },

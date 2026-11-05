@@ -223,7 +223,7 @@ function GuestbookForm({ onSubmit, isDisabled = false }) {
           }
           sx={{
             alignSelf: 'flex-start',
-            px: 1,
+            px: 1.5,
             color: 'var(--color-text-muted)',
             fontWeight: 600,
             '&:hover': { bgcolor: 'var(--color-hover-layer)' },

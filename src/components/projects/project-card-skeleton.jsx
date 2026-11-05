@@ -12,7 +12,7 @@ function ProjectCardSkeleton() {
     <Card
       elevation={ 0 }
       sx={{
-        borderRadius: 3,
+        borderRadius: 4,
         bgcolor: 'var(--color-bg-primary)',
         border: '1px solid var(--color-border-divider)',
       }}

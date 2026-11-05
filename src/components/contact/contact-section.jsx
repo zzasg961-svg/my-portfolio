@@ -26,7 +26,7 @@ function ContactSection() {
       sx={{
         bgcolor: 'var(--color-bg-primary)',
         border: '1px solid var(--color-border-divider)',
-        borderRadius: 2,
+        borderRadius: 4,
       }}
     >
       <CardContent sx={{ py: { xs: 5, md: 8 }, px: { xs: 2.5, md: 8 } }}>

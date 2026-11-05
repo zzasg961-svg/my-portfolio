@@ -31,7 +31,7 @@ function HomeProjectsSection({ previewCount = 3 }) {
       sx={{
         bgcolor: 'var(--color-bg-primary)',
         border: '1px solid var(--color-border-divider)',
-        borderRadius: 2,
+        borderRadius: 4,
         /** 상단 고정 바에 가려지지 않도록 스크롤 위치 보정 */
         scrollMarginTop: { xs: 120, sm: 88 },
       }}

@@ -41,7 +41,7 @@ function ProjectDetailDialog({ projects, selectedIndex, onChangeIndex, onClose }
       fullWidth
       maxWidth="sm"
       aria-labelledby="project-detail-title"
-      slotProps={{ paper: { sx: { borderRadius: isMobile ? 0 : 3, bgcolor: 'var(--color-bg-primary)' } } }}
+      slotProps={{ paper: { sx: { borderRadius: isMobile ? 0 : 4, bgcolor: 'var(--color-bg-primary)' } } }}
     >
       {project && (
         <>

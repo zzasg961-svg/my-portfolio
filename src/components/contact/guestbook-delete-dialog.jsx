@@ -60,7 +60,7 @@ function GuestbookDeleteDialog({ isOpen, onClose, onConfirm }) {
         paper: {
           component: 'form',
           onSubmit: handleSubmit,
-          sx: { borderRadius: 3, bgcolor: 'var(--color-bg-primary)' },
+          sx: { borderRadius: 4, bgcolor: 'var(--color-bg-primary)' },
         },
       }}
     >
@@ -80,7 +80,7 @@ function GuestbookDeleteDialog({ isOpen, onClose, onConfirm }) {
           slotProps={{ htmlInput: { maxLength: 20 } }}
         />
         {error && (
-          <Alert severity="error" sx={{ mt: 1.5, borderRadius: 2 }}>
+          <Alert severity="error" sx={{ mt: 1.5, borderRadius: 3 }}>
             {error}
           </Alert>
         )}

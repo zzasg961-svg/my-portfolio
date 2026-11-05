@@ -25,7 +25,7 @@ function ProjectCard({ project, onViewDetails }) {
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
-        borderRadius: 3,
+        borderRadius: 4,
         bgcolor: 'var(--color-bg-primary)',
         border: '1px solid var(--color-border-divider)',
         transition: 'transform 0.2s ease, box-shadow 0.2s ease',

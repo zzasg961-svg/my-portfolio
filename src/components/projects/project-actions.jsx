@@ -12,7 +12,7 @@ const actionButtonSx = {
   minWidth: 0,
   height: 40,
   px: 1.5,
-  borderRadius: 2,
+  borderRadius: 2.5,
   fontSize: '0.875rem',
   lineHeight: 1,
   whiteSpace: 'nowrap',

@@ -50,7 +50,8 @@ function GuestbookList({ entries, isLoading = false, error = '', onDelete }) {
             component="li"
             key={entry.id}
             sx={{
-              p: { xs: 2, md: 2.5 },
+              px: { xs: 2.5, md: 3 },
+            py: { xs: 2, md: 2.5 },
               borderRadius: 3,
               bgcolor: 'var(--color-bg-raised)',
             }}
