@@ -17,10 +17,12 @@ import { AGE_GROUPS, REFERRAL_SOURCES } from './contact-data';
 import RatingBurst, { BURST_DURATION, starPop } from './rating-burst';
 
 const MESSAGE_MAX = 500;
+const PASSWORD_MIN = 4;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const INITIAL_FORM = {
   name: '',
+  password: '',
   message: '',
   rating: null,
   email: '',
@@ -53,17 +55,20 @@ const fieldSx = {
  * @returns {object} Supabase insert용 객체
  */
 function toPayload(form) {
-  return Object.fromEntries(
-    Object.entries(form).map(([key, value]) => [
+  const { password, ...rest } = form;
+  const payload = Object.fromEntries(
+    Object.entries(rest).map(([key, value]) => [
       key,
       typeof value === 'string' ? value.trim() || null : value,
     ]),
   );
+  /** 비밀번호는 공백까지 그대로 보내고, DB 트리거가 bcrypt로 암호화합니다 */
+  return { ...payload, password_hash: password };
 }
 
 /**
  * GuestbookForm 컴포넌트
- * 방명록 작성 폼입니다. 이름·메시지는 필수, 나머지는 접히는 "추가 정보"에서 선택 입력합니다.
+ * 방명록 작성 폼입니다. 이름·비밀번호·메시지·별점은 필수, 나머지는 접히는 "추가 정보"에서 선택 입력합니다.
  *
  * Props:
  * @param {function} onSubmit - 입력값을 받아 저장하고 성공 여부(boolean)를 돌려주는 함수 [Required]
@@ -83,8 +88,15 @@ function GuestbookForm({ onSubmit, isDisabled = false }) {
   useEffect(() => () => clearTimeout(burstTimerRef.current), []);
 
   const emailError = form.email.trim() !== '' && !EMAIL_PATTERN.test(form.email.trim());
+  const passwordError = form.password !== '' && form.password.length < PASSWORD_MIN;
   const canSubmit =
-    !isDisabled && !isSubmitting && form.name.trim() && form.message.trim() && !emailError;
+    !isDisabled &&
+    !isSubmitting &&
+    form.name.trim() &&
+    form.password.length >= PASSWORD_MIN &&
+    form.message.trim() &&
+    Boolean(form.rating) &&
+    !emailError;
 
   const handleChange = (field) => (event) => {
     setForm((prev) => ({ ...prev, [field]: event.target.value }));
@@ -120,16 +132,36 @@ function GuestbookForm({ onSubmit, isDisabled = false }) {
   return (
     <Box component="form" onSubmit={handleSubmit} noValidate>
       <Stack spacing={2}>
-        <TextField
-          label="이름"
-          value={form.name}
-          onChange={handleChange('name')}
-          required
-          fullWidth
-          disabled={isDisabled}
-          slotProps={{ htmlInput: { maxLength: 30 } }}
-          sx={fieldSx}
-        />
+        <Grid container spacing={2}>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <TextField
+              label="이름"
+              value={form.name}
+              onChange={handleChange('name')}
+              required
+              fullWidth
+              disabled={isDisabled}
+              slotProps={{ htmlInput: { maxLength: 30 } }}
+              sx={fieldSx}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <TextField
+              label="비밀번호 (삭제 시 필요)"
+              type="password"
+              autoComplete="new-password"
+              value={form.password}
+              onChange={handleChange('password')}
+              required
+              fullWidth
+              disabled={isDisabled}
+              error={passwordError}
+              helperText={passwordError ? `${PASSWORD_MIN}자 이상 입력해 주세요.` : undefined}
+              slotProps={{ htmlInput: { maxLength: 20 } }}
+              sx={fieldSx}
+            />
+          </Grid>
+        </Grid>
         <TextField
           label="남기실 메시지"
           value={form.message}
@@ -147,9 +179,9 @@ function GuestbookForm({ onSubmit, isDisabled = false }) {
           sx={fieldSx}
         />
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', columnGap: 1.5, rowGap: 0.5 }}>
           <Box sx={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--color-text-secondary)' }}>
-            별점
+            별점 *
           </Box>
           <Box
             sx={{
@@ -174,6 +206,11 @@ function GuestbookForm({ onSubmit, isDisabled = false }) {
             />
             {burst && <RatingBurst key={burst.id} particles={burst.particles} />}
           </Box>
+          {!form.rating && !isDisabled && (
+            <Box sx={{ fontSize: '0.8125rem', color: 'var(--color-text-muted)' }}>
+              별점을 선택해야 등록할 수 있어요.
+            </Box>
+          )}
         </Box>
 
         <Button
@@ -285,7 +322,7 @@ function GuestbookForm({ onSubmit, isDisabled = false }) {
           }}
         >
           <LockOutlinedIcon sx={{ fontSize: 16 }} />
-          이름과 연락처 정보는 공개되지 않고 안전하게 보관돼요.
+          이름과 연락처는 공개되지 않고, 비밀번호는 암호화되어 저장돼요.
         </Box>
 
         {status && (

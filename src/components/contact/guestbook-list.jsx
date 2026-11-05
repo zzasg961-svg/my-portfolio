@@ -1,5 +1,8 @@
-import { Alert, Box, Rating, Skeleton, Stack } from '@mui/material';
+import { useState } from 'react';
+import { Alert, Box, IconButton, Rating, Skeleton, Stack } from '@mui/material';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { formatDate } from '../../utils/format-date';
+import GuestbookDeleteDialog from './guestbook-delete-dialog';
 
 /**
  * GuestbookList 컴포넌트
@@ -9,11 +12,14 @@ import { formatDate } from '../../utils/format-date';
  * @param {Array<{id: number, message: string, rating: number, created_at: string}>} entries - 방명록 목록 [Required]
  * @param {boolean} isLoading - 불러오는 중인지 여부 [Optional, 기본값: false]
  * @param {string} error - 오류 메시지 [Optional, 기본값: '']
+ * @param {function} onDelete - (id, password) => Promise<boolean> 삭제 함수 (없으면 삭제 버튼 숨김) [Optional]
  *
  * Example usage:
- * <GuestbookList entries={ entries } isLoading={ isLoading } error={ error } />
+ * <GuestbookList entries={ entries } isLoading={ isLoading } error={ error } onDelete={ deleteEntry } />
  */
-function GuestbookList({ entries, isLoading = false, error = '' }) {
+function GuestbookList({ entries, isLoading = false, error = '', onDelete }) {
+  const [deleteTargetId, setDeleteTargetId] = useState(null);
+
   if (error) {
     return <Alert severity="error" sx={{ borderRadius: 3 }}>{error}</Alert>;
   }
@@ -37,60 +43,86 @@ function GuestbookList({ entries, isLoading = false, error = '' }) {
   }
 
   return (
-    <Stack component="ul" spacing={1.5} sx={{ listStyle: 'none', m: 0, p: 0 }}>
-      {entries.map((entry) => (
-        <Box
-          component="li"
-          key={entry.id}
-          sx={{
-            p: { xs: 2, md: 2.5 },
-            borderRadius: 3,
-            bgcolor: 'var(--color-bg-raised)',
-          }}
-        >
+    <>
+      <Stack component="ul" spacing={1.5} sx={{ listStyle: 'none', m: 0, p: 0 }}>
+        {entries.map((entry) => (
           <Box
+            component="li"
+            key={entry.id}
             sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: 1,
-              mb: 1,
+              p: { xs: 2, md: 2.5 },
+              borderRadius: 3,
+              bgcolor: 'var(--color-bg-raised)',
             }}
           >
-            {entry.rating ? (
-              <Rating
-                value={entry.rating}
-                readOnly
-                size="small"
-                sx={{
-                  '& .MuiRating-iconFilled': { color: 'var(--color-text-primary)' },
-                  '& .MuiRating-iconEmpty': { color: 'var(--color-border-default)' },
-                }}
-              />
-            ) : (
-              <span />
-            )}
             <Box
-              component="time"
-              dateTime={entry.created_at}
-              sx={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 1,
+                mb: 1,
+              }}
             >
-              {formatDate(entry.created_at)}
+              {entry.rating ? (
+                <Rating
+                  value={entry.rating}
+                  readOnly
+                  size="small"
+                  sx={{
+                    '& .MuiRating-iconFilled': { color: 'var(--color-text-primary)' },
+                    '& .MuiRating-iconEmpty': { color: 'var(--color-border-default)' },
+                  }}
+                />
+              ) : (
+                <span />
+              )}
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <Box
+                  component="time"
+                  dateTime={entry.created_at}
+                  sx={{ fontSize: '0.75rem', color: 'var(--color-text-muted)' }}
+                >
+                  {formatDate(entry.created_at)}
+                </Box>
+                {onDelete && (
+                  <IconButton
+                    size="small"
+                    onClick={() => setDeleteTargetId(entry.id)}
+                    aria-label="방명록 삭제"
+                    sx={{
+                      mr: -0.75,
+                      color: 'var(--color-text-muted)',
+                      '&:hover': { color: 'var(--color-text-primary)', bgcolor: 'var(--color-hover-layer)' },
+                    }}
+                  >
+                    <DeleteOutlinedIcon sx={{ fontSize: 18 }} />
+                  </IconButton>
+                )}
+              </Box>
+            </Box>
+            <Box
+              sx={{
+                color: 'var(--color-text-primary)',
+                lineHeight: 1.6,
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+              }}
+            >
+              {entry.message}
             </Box>
           </Box>
-          <Box
-            sx={{
-              color: 'var(--color-text-primary)',
-              lineHeight: 1.6,
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word',
-            }}
-          >
-            {entry.message}
-          </Box>
-        </Box>
-      ))}
-    </Stack>
+        ))}
+      </Stack>
+
+      {onDelete && (
+        <GuestbookDeleteDialog
+          isOpen={deleteTargetId !== null}
+          onClose={() => setDeleteTargetId(null)}
+          onConfirm={(password) => onDelete(deleteTargetId, password)}
+        />
+      )}
+    </>
   );
 }
 

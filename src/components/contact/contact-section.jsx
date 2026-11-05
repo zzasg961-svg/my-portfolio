@@ -16,7 +16,7 @@ import SocialLinks from './social-links';
  * <ContactSection />
  */
 function ContactSection() {
-  const { entries, isLoading, error, isConfigured, addEntry } = useGuestbook();
+  const { entries, isLoading, error, isConfigured, addEntry, deleteEntry } = useGuestbook();
 
   return (
     <Card
@@ -73,7 +73,7 @@ function ContactSection() {
                   개
                 </Box>
               )}
-              <GuestbookList entries={entries} isLoading={isLoading} error={error} />
+              <GuestbookList entries={entries} isLoading={isLoading} error={error} onDelete={deleteEntry} />
             </Box>
           )}
         </Stack>

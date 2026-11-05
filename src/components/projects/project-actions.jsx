@@ -2,13 +2,23 @@ import { Button, Stack } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LaunchIcon from '@mui/icons-material/Launch';
 
-/** 버튼 클릭 시 살짝 눌리는 피드백 (과하지 않게 0.97배) */
-const pressFeedbackSx = {
-  flex: 1,
-  minHeight: 40,
+/**
+ * 링크 버튼 공통 스타일
+ * - 글자 길이에 맞춰 폭을 나눠 갖고(flex: 1 1 auto), 좌우 여백·아이콘 간격을 동일하게 고정
+ * - 클릭 시 살짝 눌리는 피드백 (과하지 않게 0.97배)
+ */
+const actionButtonSx = {
+  flex: '1 1 auto',
+  minWidth: 0,
+  height: 40,
+  px: 1.5,
   borderRadius: 2,
+  fontSize: '0.875rem',
+  lineHeight: 1,
   whiteSpace: 'nowrap',
-  transition: 'transform 0.12s ease',
+  transition: 'transform 0.12s ease, background-color 0.2s ease',
+  '& .MuiButton-startIcon': { ml: 0, mr: 0.75 },
+  '& .MuiButton-startIcon > svg': { fontSize: 18 },
   '&:active': { transform: 'scale(0.97)' },
 };
 
@@ -33,9 +43,9 @@ function ProjectActions({ demoUrl, githubUrl = '', onViewDetails }) {
           href={ demoUrl }
           target="_blank"
           rel="noopener noreferrer"
-          startIcon={ <LaunchIcon fontSize="small" /> }
+          startIcon={ <LaunchIcon /> }
           disableElevation
-          sx={ pressFeedbackSx }
+          sx={ actionButtonSx }
         >
           Live Demo
         </Button>
@@ -46,11 +56,12 @@ function ProjectActions({ demoUrl, githubUrl = '', onViewDetails }) {
             href={ githubUrl }
             target="_blank"
             rel="noopener noreferrer"
-            startIcon={ <GitHubIcon fontSize="small" /> }
+            startIcon={ <GitHubIcon /> }
             sx={{
-              ...pressFeedbackSx,
+              ...actionButtonSx,
               color: 'var(--color-text-primary)',
               borderColor: 'var(--color-border-divider)',
+              '&:hover': { borderColor: 'var(--color-border-default)', bgcolor: 'var(--color-hover-layer)' },
             }}
           >
             GitHub
@@ -62,7 +73,7 @@ function ProjectActions({ demoUrl, githubUrl = '', onViewDetails }) {
           variant="text"
           color="secondary"
           onClick={ onViewDetails }
-          sx={ pressFeedbackSx }
+          sx={{ ...actionButtonSx, width: '100%' }}
         >
           View Details
         </Button>

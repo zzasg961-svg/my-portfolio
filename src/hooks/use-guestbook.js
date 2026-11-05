@@ -52,5 +52,24 @@ export function useGuestbook() {
     return true;
   };
 
-  return { entries, isLoading, error, isConfigured: Boolean(supabase), addEntry };
+  /**
+   * 비밀번호가 맞으면 방명록을 삭제하고 목록을 다시 불러옵니다.
+   * 비밀번호 검증은 DB 함수(delete_guestbook_entry)에서 처리합니다.
+   *
+   * @param {number} id - 방명록 id
+   * @param {string} password - 작성 시 입력한 비밀번호
+   * @returns {Promise<boolean>} 삭제 성공 여부
+   */
+  const deleteEntry = async (id, password) => {
+    if (!supabase) return false;
+    const { data, error: rpcError } = await supabase.rpc('delete_guestbook_entry', {
+      entry_id: id,
+      entry_password: password,
+    });
+    if (rpcError || !data) return false;
+    await fetchEntries();
+    return true;
+  };
+
+  return { entries, isLoading, error, isConfigured: Boolean(supabase), addEntry, deleteEntry };
 }
