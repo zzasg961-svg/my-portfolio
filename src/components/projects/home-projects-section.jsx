@@ -32,6 +32,8 @@ function HomeProjectsSection({ previewCount = 3 }) {
         bgcolor: 'var(--color-bg-primary)',
         border: '1px solid var(--color-border-divider)',
         borderRadius: 2,
+        /** 상단 고정 바에 가려지지 않도록 스크롤 위치 보정 */
+        scrollMarginTop: { xs: 120, sm: 88 },
       }}
     >
       <CardContent sx={{ py: { xs: 5, md: 8 }, px: { xs: 2, md: 4 } }}>

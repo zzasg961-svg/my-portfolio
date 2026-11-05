@@ -2,6 +2,7 @@ import { Stack } from '@mui/material'
 import SectionCard from '../components/SectionCard'
 import ContactSection from '../components/contact/contact-section'
 import HomeProjectsSection from '../components/projects/home-projects-section'
+import { useScrollToSection } from '../hooks/use-scroll-to-section'
 
 const SECTIONS = [
   {
@@ -30,6 +31,8 @@ const SECTIONS = [
 ]
 
 function Home() {
+  useScrollToSection()
+
   return (
     <Stack spacing={{ xs: 2, md: 3 }}>
       {SECTIONS.map((section) => (

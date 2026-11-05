@@ -1,13 +1,26 @@
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { AppBar, Box, Button, Container, Toolbar, Typography } from '@mui/material'
 
 const NAV_ITEMS = [
   { label: 'Home', to: '/' },
   { label: 'About Me', to: '/about' },
-  { label: 'Projects', to: '/projects' },
+  // Projects는 홈 화면의 프로젝트 섹션으로 스크롤합니다.
+  { label: 'Projects', to: '/', scrollTo: 'projects' },
 ]
 
 function Navbar() {
+  const location = useLocation()
+  const currentScrollTo = location.state?.scrollTo
+
+  // 같은 경로('/')를 공유하므로 scrollTo 값까지 비교해 활성 탭을 정합니다.
+  const isItemActive = (item) => {
+    if (item.scrollTo === 'projects') {
+      return location.pathname === '/projects' || (location.pathname === '/' && currentScrollTo === 'projects')
+    }
+    if (item.to === '/') return location.pathname === '/' && currentScrollTo !== 'projects'
+    return location.pathname === item.to
+  }
+
   return (
     <AppBar
       position="sticky"
@@ -39,10 +52,11 @@ function Navbar() {
           <Box component="nav" sx={{ display: 'flex', gap: 0.5 }}>
             {NAV_ITEMS.map((item) => (
               <Button
-                key={item.to}
-                component={NavLink}
+                key={item.label}
+                component={Link}
                 to={item.to}
-                end
+                state={item.scrollTo ? { scrollTo: item.scrollTo } : undefined}
+                className={isItemActive(item) ? 'active' : undefined}
                 sx={{
                   color: 'var(--color-text-muted)',
                   fontWeight: 600,
