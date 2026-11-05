@@ -1,14 +1,7 @@
-import { useState } from 'react';
-import { Alert, Box, Button, Grid, Stack } from '@mui/material';
+import { Alert, Box, Button, Stack } from '@mui/material';
 import SectionHeading from '../components/contact/section-heading';
-import ProjectCard from '../components/projects/project-card';
-import ProjectCardSkeleton from '../components/projects/project-card-skeleton';
-import ProjectDetailDialog from '../components/projects/project-detail-dialog';
+import ProjectGrid from '../components/projects/project-grid';
 import { useProjects } from '../hooks/use-projects';
-
-/** 카드 그리드: 모바일 1열 → 태블릿 2열 → 데스크톱 3열 */
-const GRID_SIZE = { xs: 12, sm: 6, md: 4 };
-const SKELETON_COUNT = 3;
 
 /**
  * Projects 페이지
@@ -19,7 +12,6 @@ const SKELETON_COUNT = 3;
  */
 function Projects() {
   const { projects, isLoading, error, isConfigured, onRetry } = useProjects();
-  const [selectedIndex, setSelectedIndex] = useState(-1);
 
   return (
     <Box component="section" id="projects">
@@ -57,27 +49,8 @@ function Projects() {
           </Box>
         )}
 
-        <Grid container spacing={{ xs: 2, md: 3 }}>
-          {isLoading
-            ? Array.from({ length: SKELETON_COUNT }, (_, index) => (
-              <Grid key={ index } size={ GRID_SIZE }>
-                <ProjectCardSkeleton />
-              </Grid>
-            ))
-            : projects.map((project, index) => (
-              <Grid key={ project.id } size={ GRID_SIZE }>
-                <ProjectCard project={ project } onViewDetails={ () => setSelectedIndex(index) } />
-              </Grid>
-            ))}
-        </Grid>
+        <ProjectGrid projects={ projects } isLoading={ isLoading } />
       </Stack>
-
-      <ProjectDetailDialog
-        projects={ projects }
-        selectedIndex={ selectedIndex }
-        onChangeIndex={ setSelectedIndex }
-        onClose={ () => setSelectedIndex(-1) }
-      />
     </Box>
   );
 }

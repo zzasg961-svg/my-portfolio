@@ -4,7 +4,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseIcon from '@mui/icons-material/Close';
 import { useSwipe } from '../../hooks/use-swipe';
-import PhoneMockup from './phone-mockup';
+import ProjectThumbnail from './project-thumbnail';
 import ProjectActions from './project-actions';
 import TechStackChips from './tech-stack-chips';
 
@@ -66,7 +66,7 @@ function ProjectDetailDialog({ projects, selectedIndex, onChangeIndex, onClose }
           </Stack>
 
           <Box { ...swipeHandlers }>
-            <PhoneMockup key={ project.id } src={ project.thumbnail_url } alt={ `${project.title} 미리보기` } />
+            <ProjectThumbnail key={ project.id } src={ project.thumbnail_url } alt={ `${project.title} 미리보기` } />
           </Box>
 
           <DialogContent sx={{ px: { xs: 2, md: 3 }, pt: 2.5, pb: 3 }}>
