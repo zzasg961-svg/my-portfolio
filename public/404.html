@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>이동 중...</title>
+    <script>
+      /**
+       * GitHub Pages 404 대체 페이지
+       * HashRouter를 사용하므로 /my-portfolio/projects 같은 주소를
+       * /my-portfolio/#/projects 로 바꿔서 이동합니다.
+       */
+      (function () {
+        var base = '/my-portfolio';
+        var path = window.location.pathname;
+        var route = path.indexOf(base) === 0 ? path.slice(base.length) : path;
+        route = route.replace(/^\/+/, '');
+        window.location.replace(base + '/#/' + route + window.location.search + window.location.hash);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
