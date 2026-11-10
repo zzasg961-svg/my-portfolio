@@ -1,8 +1,7 @@
-import { Routes, Route } from 'react-router-dom'
+import { Navigate, Routes, Route } from 'react-router-dom'
 import { Box, Container } from '@mui/material'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
-import About from './pages/About'
 import Projects from './pages/Projects'
 
 function App() {
@@ -12,7 +11,8 @@ function App() {
       <Container maxWidth="md" sx={{ py: { xs: 3, md: 6 }, px: { xs: 2, sm: 3 } }}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
+          {/* 예전 About Me 주소로 들어오면 홈의 About Me 섹션으로 이동 */}
+          <Route path="/about" element={<Navigate to="/" replace state={{ scrollTo: 'about' }} />} />
           <Route path="/projects" element={<Projects />} />
         </Routes>
       </Container>

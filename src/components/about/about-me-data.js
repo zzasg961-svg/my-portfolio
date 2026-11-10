@@ -1,7 +1,7 @@
 /**
  * About Me 데이터
- * - basicInfo: 상단 기본 정보 카드에 표시됩니다.
- * - sections: About Me 탭의 콘텐츠입니다. showInHome이 true인 섹션은 Home 탭에도 표시됩니다.
+ * - basicInfo: 홈 화면 About Me 섹션의 기본 정보입니다.
+ * - sections: showInHome이 true인 섹션만 홈 화면에 표시됩니다.
  *
  * 프로필 사진을 넣으려면 public 폴더에 이미지를 넣고 photo 값을 바꿔 주세요.
  * 예) public/profile.jpg → photo: `${import.meta.env.BASE_URL}profile.jpg`
@@ -13,7 +13,7 @@ export const ABOUT_ME_DATA = {
     education: '한국해양대학교 기계공학과',
     major: '기계시스템전공',
     experience: '신입',
-    photo: '',
+    photo: `${import.meta.env.BASE_URL}profile.jpg`,
   },
   sections: [
     {
@@ -31,14 +31,6 @@ export const ABOUT_ME_DATA = {
         '"한 번 잘 만들고, 여러 번 쓴다." 반복되는 디자인은 컴포넌트로, 반복되는 로직은 함수로 정리해 효율적이고 재사용 가능한 코드를 작성합니다.\n\n' +
         '수정은 한 곳에서, 효과는 모든 곳에서. 잘 정리된 코드는 저뿐만 아니라 함께 일하는 동료의 시간까지 아껴 준다고 믿습니다.',
       showInHome: true,
-    },
-    {
-      id: 'personal',
-      title: '개인적인 이야기',
-      content:
-        '운동, 독서, 음악 듣기를 좋아합니다.\n\n' +
-        '운동으로 꾸준함을, 독서로 새로운 시각을, 음악으로 리듬감과 여유를 얻습니다. 디자인 아이디어가 막힐 때면 오히려 이런 다른 분야에서 실마리를 찾곤 해요.',
-      showInHome: false,
     },
   ],
 };
