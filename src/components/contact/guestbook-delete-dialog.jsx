@@ -8,6 +8,7 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
+import { outlinedPillSx } from '../common/button-styles';
 
 /**
  * GuestbookDeleteDialog 컴포넌트
@@ -86,7 +87,7 @@ function GuestbookDeleteDialog({ isOpen, onClose, onConfirm }) {
         )}
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 2.5 }}>
-        <Button onClick={ handleClose } color="inherit" disabled={ isDeleting }>
+        <Button onClick={ handleClose } disabled={ isDeleting } sx={{ ...outlinedPillSx('neutral'), minHeight: 36 }}>
           취소
         </Button>
         <Button type="submit" variant="contained" color="error" disableElevation disabled={ !password || isDeleting }>

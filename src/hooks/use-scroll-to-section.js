@@ -17,6 +17,11 @@ export function useScrollToSection() {
     if (!targetId) return;
     /** 페이지 렌더링이 끝난 뒤 스크롤하도록 한 프레임 미룹니다 */
     const frameId = requestAnimationFrame(() => {
+      // Hero는 sticky로 고정되어 있어 scrollIntoView가 동작하지 않으므로 맨 위로 이동합니다
+      if (targetId === 'hero') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
       document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
     return () => cancelAnimationFrame(frameId);

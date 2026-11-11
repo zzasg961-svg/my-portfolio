@@ -1,6 +1,8 @@
 import { Button, Stack } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LaunchIcon from '@mui/icons-material/Launch';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { outlinedPillSx } from '../common/button-styles';
 
 /**
  * 링크 버튼 공통 스타일
@@ -70,10 +72,9 @@ function ProjectActions({ demoUrl, githubUrl = '', onViewDetails }) {
       </Stack>
       {onViewDetails && (
         <Button
-          variant="text"
-          color="secondary"
           onClick={ onViewDetails }
-          sx={{ ...actionButtonSx, width: '100%' }}
+          endIcon={ <ArrowForwardIcon /> }
+          sx={{ ...actionButtonSx, ...outlinedPillSx('accent'), width: '100%', minHeight: 40, borderRadius: 2.5 }}
         >
           View Details
         </Button>

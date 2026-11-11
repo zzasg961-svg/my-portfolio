@@ -4,7 +4,37 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Portfolio</title>
+    <meta name="theme-color" content="#FFFFFF" />
+    <!-- 첫 화면이 그려지기 전에 테마를 정해서 깜빡임을 막습니다 (저장된 값 → 기기 설정 순) -->
+    <script>
+      (function () {
+        var theme = 'light';
+        try {
+          var saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') theme = saved;
+          else if (window.matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark';
+        } catch (error) {
+          /* 저장소를 못 쓰면 기본값(라이트) 사용 */
+        }
+        document.documentElement.dataset.theme = theme;
+        if (theme === 'dark') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0A0A0A');
+      })();
+    </script>
+    <meta name="description" content="디자인은 그리고, 코드는 짓습니다. 개발을 이해하는 웹디자이너 임유섭의 포트폴리오." />
+    <title>임유섭 — Web Designer who codes</title>
+
+    <!-- // font: 본문 Pretendard, 디스플레이 Space Grotesk, 코드 JetBrains Mono -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;700&display=swap"
+    />
   </head>
   <body>
     <div id="root"></div>

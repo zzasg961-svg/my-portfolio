@@ -1,64 +1,150 @@
 /*
- * 컬러 팔레트 디자인 시스템
- * 출처: "컬러 팔레트 디자인 시스템.md" (네이버 naver.com 디자인 토큰 기반)
+ * 디자인 토큰
+ * 레퍼런스(dr-a.co.kr)에서 추출한 팔레트를 그대로 사용합니다.
+ * - 무채색: #000 / #0A0A0A / #121212 / #1D1D1D / #262626 / #525252 / #757575 / #969696 / #EDEDED / #F6F6F6 / #FFF
+ * - 웜그레이: #ECE8DF, 블루그레이: #D1E1E8, 연분홍: #FFEDED
+ * - 포인트 레드: #E82323 (채움·밝은 배경 글자), #FA4343 (어두운 배경 글자)
+ * - 형광 옐로: #F2FF01 (텍스트 선택 등 아주 작은 디테일)
+ *
+ * 테마는 <html data-theme="light|dark">로 전환합니다. (index.html의 인라인 스크립트가 첫 화면 전에 정함)
  */
 
-:root {
-  /* Primary Colors */
-  --color-primary: #03C75A;
-  --color-primary-light: #29CF73;
-  --color-primary-dark: #00893D;
+/* // light (기본값) */
+:root,
+:root[data-theme="light"] {
+  color-scheme: light;
 
-  /* Secondary Colors */
-  --color-secondary: #3283FD;
-  --color-accent: #F4361E;
+  --color-accent: #E82323;
+  --color-accent-text: #E82323;      /* 흰 배경 대비 4.5:1 */
+  --color-highlight: #F2FF01;
 
-  /* Background Colors */
-  --color-bg-primary: #FFFFFF;
-  --color-bg-secondary: #EDF0F4;
+  --color-primary: #E82323;
+  --color-primary-light: #FA4343;
+  --color-primary-dark: #C81E1E;
+  --color-primary-subtle: rgba(232, 35, 35, 0.08);
+  --color-secondary: #E82323;
 
-  /* Text Colors */
-  --color-text-primary: #000000;
-  --color-text-secondary: #2E2E2E;
-  --color-text-muted: #737373;
+  --color-bg-secondary: #FFFFFF;     /* 페이지 바탕 */
+  --color-bg-primary: #F6F6F6;       /* 표면: 카드 */
+  --color-bg-raised: #EDEDED;        /* 카드 안쪽 한 단계 위 */
+  /* Hero: 흰 바탕에 포인트 레드로 강조 */
+  --color-bg-hero: #FFFFFF;
+  --hero-text: #0A0A0A;
+  --hero-muted: #525252;
+  --hero-highlight: #E82323;         /* 헤드라인 강조 단어 */
+  --hero-accent: #E82323;            /* 헤드라인 마침표·커서·상태 점 */
+  --hero-pulse: rgba(232, 35, 35, 0.45);
+  --hero-code-tag: #E82323;
+  --hero-code-attr: #757575;
+  --hero-code-string: #525252;
+  --hero-btn-bg: #E82323;
+  --hero-btn-text: #FFFFFF;
+  --hero-btn-hover: #C81E1E;
+  --hero-btn-shadow: rgba(232, 35, 35, 0.25);
+  --hero-line: #0A0A0A;              /* 보조 버튼 테두리·채움 */
+  --hero-line-hover-text: #FFFFFF;
+  --hero-outline: rgba(232, 35, 35, 0.35);    /* 배경의 큰 </> 외곽선 */
+  --hero-cursor: #E82323;
+  --hero-blob-1: rgba(232, 35, 35, 0.10);
+  --hero-blob-2: rgba(255, 237, 237, 0.9);    /* #FFEDED */
+  --hero-blob-3: rgba(232, 35, 35, 0.07);
+  --color-nav-bg: rgba(255, 255, 255, 0.72);
+  --color-warm: #ECE8DF;
 
-  /* Interactive Colors */
-  --color-button-primary: #03C75A;
-  --color-button-hover: #03A94D;
-  --color-link: #0C43B7;
-  --color-link-hover: #3283FD;
+  --color-text-primary: #0A0A0A;
+  --color-text-secondary: #262626;
+  --color-text-muted: #757575;
+  --color-code-string: #525252;
 
-  /* 확장 변수 */
-  --color-bg-raised: #F8F9FA;
-  --color-primary-subtle: #B3EECD;
+  --color-button-primary: #E82323;
+  --color-button-hover: #C81E1E;
+  --color-button-active: #A81818;
+  --color-link: #E82323;
+  --color-link-hover: #C81E1E;
+
   --color-border-divider: rgba(0, 0, 0, 0.08);
-  --color-border-default: rgba(0, 0, 0, 0.15);
-  --color-button-active: #00893D;
-  --color-hover-layer: rgba(0, 0, 0, 0.06);
+  --color-border-default: rgba(0, 0, 0, 0.16);
+  --color-hover-layer: rgba(0, 0, 0, 0.05);
+  --shadow-curtain: 0 -24px 60px rgba(0, 0, 0, 0.08);
 }
 
-/* 다크모드: 시스템 설정 따르기 */
+/* // dark */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-accent: #E82323;
+  --color-accent-text: #FA4343;      /* 어두운 배경 대비 5:1 이상 */
+
+  --color-primary-subtle: rgba(250, 67, 67, 0.12);
+  --color-secondary: #FA4343;
+
+  --color-bg-secondary: #0A0A0A;
+  --color-bg-primary: #121212;
+  --color-bg-raised: #1D1D1D;
+  --color-bg-hero: #0A0A0A;
+  --hero-text: #F6F6F6;
+  --hero-muted: #969696;
+  --hero-highlight: #FA4343;
+  --hero-accent: #E82323;
+  --hero-pulse: rgba(232, 35, 35, 0.5);
+  --hero-code-tag: #FA4343;
+  --hero-code-attr: #969696;
+  --hero-code-string: #ECE8DF;
+  --hero-btn-bg: #E82323;
+  --hero-btn-text: #FFFFFF;
+  --hero-btn-hover: #C81E1E;
+  --hero-btn-shadow: rgba(232, 35, 35, 0.25);
+  --hero-line: #F6F6F6;
+  --hero-line-hover-text: #0A0A0A;
+  --hero-outline: rgba(255, 255, 255, 0.16);
+  --hero-cursor: #E82323;
+  --hero-blob-1: rgba(232, 35, 35, 0.28);
+  --hero-blob-2: rgba(38, 38, 38, 0.9);
+  --hero-blob-3: rgba(250, 67, 67, 0.16);
+  --color-nav-bg: rgba(10, 10, 10, 0.72);
+
+  --color-text-primary: #F6F6F6;
+  --color-text-secondary: #EDEDED;
+  --color-text-muted: #969696;
+  --color-code-string: #ECE8DF;
+
+  --color-link: #FA4343;
+  --color-link-hover: #FFEDED;
+
+  --color-border-divider: rgba(255, 255, 255, 0.08);
+  --color-border-default: rgba(255, 255, 255, 0.16);
+  --color-hover-layer: rgba(255, 255, 255, 0.06);
+  --shadow-curtain: 0 -24px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* 자바스크립트가 꺼져 있어도 시스템 다크 설정은 따릅니다 */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --color-primary-light: #29CF73;
-    --color-primary-dark: #089145;
-    --color-secondary: #5196FD;
-
-    --color-bg-primary: #1F1F1F;
-    --color-bg-secondary: #131313;
-
-    --color-text-primary: #F8F8F8;
-    --color-text-secondary: #E7E7E7;
-    --color-text-muted: #CDCDCD;
-
-    --color-button-hover: #29CF73;
-    --color-link: #5FA5F8;
-    --color-link-hover: #70A8FE;
-
-    --color-bg-raised: #2D2D2D;
-    --color-primary-subtle: #0E4928;
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --color-accent-text: #FA4343;
+    --color-bg-secondary: #0A0A0A;
+    --color-bg-primary: #121212;
+    --color-bg-raised: #1D1D1D;
+    --color-bg-hero: #0A0A0A;
+    --color-nav-bg: rgba(10, 10, 10, 0.72);
+    --color-text-primary: #F6F6F6;
+    --color-text-secondary: #EDEDED;
+    --color-text-muted: #969696;
     --color-border-divider: rgba(255, 255, 255, 0.08);
-    --color-border-default: rgba(255, 255, 255, 0.15);
-    --color-hover-layer: rgba(255, 255, 255, 0.06);
+    --color-border-default: rgba(255, 255, 255, 0.16);
   }
+}
+
+:root {
+  /* // font */
+  --font-display: 'Space Grotesk', 'Pretendard Variable', 'Pretendard', sans-serif;
+  --font-body: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont,
+    'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  /* 영문·숫자는 JetBrains Mono, 한글은 Pretendard로 자연스럽게 이어지도록 */
+  --font-code: 'JetBrains Mono', 'Pretendard Variable', 'Pretendard', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* // motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration: 0.8s;
 }

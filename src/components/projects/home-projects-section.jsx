@@ -1,14 +1,19 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Button, Card, CardContent, Stack } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useProjects } from '../../hooks/use-projects';
-import SectionHeading from '../contact/section-heading';
+import PageSection from '../common/page-section';
+import Reveal from '../common/reveal';
+import RollText from '../common/roll-text';
+import { outlinedPillSx } from '../common/button-styles';
+import { useMagnetic } from '../../hooks/use-magnetic';
 import ProjectGrid from './project-grid';
 
 /**
  * HomeProjectsSection 컴포넌트
- * Home 탭의 Projects 섹션입니다. 대표 프로젝트를 최대 previewCount개 보여주고
- * '더 보기' 버튼으로 Projects 탭으로 이동합니다.
+ * 홈 화면의 Projects 섹션입니다. 대표 프로젝트를 최대 previewCount개 보여주고
+ * '전체 보기' 버튼으로 Projects 페이지로 이동합니다.
+ * 상단 바의 Projects를 누르면 이 섹션(id="projects")으로 스크롤됩니다.
  *
  * Props:
  * @param {number} previewCount - 미리 보여줄 프로젝트 수 [Optional, 기본값: 3]
@@ -19,51 +24,46 @@ import ProjectGrid from './project-grid';
 function HomeProjectsSection({ previewCount = 3 }) {
   const { projects, isLoading, error, isConfigured } = useProjects();
   const previewProjects = projects.slice(0, previewCount);
-
-  /** 서버 미설정 또는 오류 시에는 홈 화면을 깔끔하게 유지하기 위해 섹션을 숨깁니다 */
-  if (!isConfigured || error || (!isLoading && previewProjects.length === 0)) return null;
+  const isUnavailable = !isConfigured || Boolean(error) || (!isLoading && previewProjects.length === 0);
+  const magnetRef = useMagnetic(0.3);
 
   return (
-    <Card
+    <PageSection
       id="projects"
-      component="section"
-      elevation={ 0 }
-      sx={{
-        bgcolor: 'var(--color-bg-primary)',
-        border: '1px solid var(--color-border-divider)',
-        borderRadius: 4,
-        /** 상단 고정 바에 가려지지 않도록 스크롤 위치 보정 */
-        scrollMarginTop: { xs: 120, sm: 88 },
-      }}
+      index="03"
+      label="PROJECTS"
+      title={ '직접 디자인하고,\n직접 만든 작업' }
+      description="기획부터 디자인, 구현과 배포까지 직접 진행한 프로젝트들이에요. 카드를 눌러 자세히 볼 수 있어요."
+      action={
+        <Button
+          ref={ magnetRef }
+          component={ RouterLink }
+          to="/projects"
+          endIcon={ <ArrowForwardIcon /> }
+          sx={{ ...outlinedPillSx('accent'), flexShrink: 0, minHeight: 48, px: 3 }}
+        >
+          <RollText>전체 보기</RollText>
+        </Button>
+      }
     >
-      <CardContent sx={{ py: { xs: 5, md: 8 }, px: { xs: 2, md: 4 } }}>
-        <Stack spacing={{ xs: 3, md: 4 }}>
-          <Stack
-            direction={{ xs: 'column', sm: 'row' }}
-            spacing={ 2 }
-            sx={{ justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'flex-end' } }}
-          >
-            <Box>
-              <SectionHeading eyebrow="PROJECTS" title="대표 프로젝트" />
-              <Box sx={{ mt: 1.5, color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
-                직접 기획하고 개발해 배포한 프로젝트들이에요.
-              </Box>
-            </Box>
-            <Button
-              component={ RouterLink }
-              to="/projects"
-              color="secondary"
-              endIcon={ <ArrowForwardIcon /> }
-              sx={{ flexShrink: 0, minHeight: 40 }}
-            >
-              더 보기
-            </Button>
-          </Stack>
-
+      {isUnavailable ? (
+        <Box
+          sx={{
+            py: 6,
+            textAlign: 'center',
+            borderRadius: 3,
+            color: 'var(--color-text-muted)',
+            border: '1px dashed var(--color-border-default)',
+          }}
+        >
+          프로젝트를 불러오지 못했어요. 잠시 후 다시 확인해 주세요.
+        </Box>
+      ) : (
+        <Reveal>
           <ProjectGrid projects={ previewProjects } isLoading={ isLoading } skeletonCount={ previewCount } />
-        </Stack>
-      </CardContent>
-    </Card>
+        </Reveal>
+      )}
+    </PageSection>
   );
 }
 

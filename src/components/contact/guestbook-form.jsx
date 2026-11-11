@@ -14,6 +14,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createBurstParticles } from '../../utils/create-burst-particles';
 import { AGE_GROUPS, REFERRAL_SOURCES } from './contact-data';
+import { outlinedPillSx } from '../common/button-styles';
 import RatingBurst, { BURST_DURATION, starPop } from './rating-burst';
 
 const MESSAGE_MAX = 500;
@@ -221,13 +222,7 @@ function GuestbookForm({ onSubmit, isDisabled = false }) {
               sx={{ transition: 'transform 0.2s', transform: isExtraOpen ? 'rotate(180deg)' : 'none' }}
             />
           }
-          sx={{
-            alignSelf: 'flex-start',
-            px: 1.5,
-            color: 'var(--color-text-muted)',
-            fontWeight: 600,
-            '&:hover': { bgcolor: 'var(--color-hover-layer)' },
-          }}
+          sx={{ ...outlinedPillSx('neutral'), alignSelf: 'flex-start', minHeight: 40, fontWeight: 600 }}
         >
           추가 정보 입력 (선택)
         </Button>

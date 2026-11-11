@@ -1,42 +1,47 @@
-import { Stack } from '@mui/material'
-import SectionCard from '../components/SectionCard'
-import ContactSection from '../components/contact/contact-section'
+import { Box, Container } from '@mui/material'
+import HeroSection from '../components/hero/hero-section'
 import HomeAboutSection from '../components/about/home-about-section'
+import SkillsSection from '../components/skills/skills-section'
 import HomeProjectsSection from '../components/projects/home-projects-section'
+import ContactSection from '../components/contact/contact-section'
+import ScrollStatement from '../components/common/scroll-statement'
 import { useScrollToSection } from '../hooks/use-scroll-to-section'
 
-const SECTIONS = [
-  {
-    id: 'hero',
-    label: 'HERO',
-    title: 'Hero',
-    description: '여기는 Hero 섹션입니다. 메인 비주얼, 이름, 간단 소개가 들어갈 예정입니다.',
-    color: 'primary',
-    highlight: true,
-  },
-  {
-    id: 'skills',
-    label: 'SKILL TREE',
-    title: 'Skill Tree',
-    description: '여기는 Skill Tree 섹션입니다. 기술 스택을 트리나 프로그레스바로 시각화할 예정입니다.',
-    color: 'secondary',
-  },
-]
-
+/**
+ * Home 페이지
+ * 스크롤 순서: Hero → About Me → Skill Tree → Projects → Contact
+ * Hero는 화면에 고정(sticky)되고, 나머지 콘텐츠가 둥근 모서리의 막처럼 그 위를 덮으며 올라옵니다.
+ */
 function Home() {
   useScrollToSection()
 
   return (
-    <Stack spacing={{ xs: 2, md: 3 }}>
-      {/* Hero → About Me → Skill Tree 순서 유지 */}
-      <SectionCard {...SECTIONS[0]} />
-      <HomeAboutSection />
-      {SECTIONS.slice(1).map((section) => (
-        <SectionCard key={section.id} {...section} />
-      ))}
-      <HomeProjectsSection />
-      <ContactSection />
-    </Stack>
+    <Box>
+      <Box sx={{ position: 'sticky', top: 0, zIndex: 0 }}>
+        <HeroSection />
+      </Box>
+
+      {/* Hero를 덮고 올라오는 콘텐츠 막 */}
+      <Box
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+          bgcolor: 'var(--color-bg-secondary)',
+          borderTopLeftRadius: { xs: 24, md: 48 },
+          borderTopRightRadius: { xs: 24, md: 48 },
+          boxShadow: 'var(--shadow-curtain)',
+          overflow: 'hidden',
+        }}
+      >
+        <ScrollStatement />
+        <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3 } }}>
+          <HomeAboutSection />
+          <SkillsSection />
+          <HomeProjectsSection />
+          <ContactSection />
+        </Container>
+      </Box>
+    </Box>
   )
 }
 

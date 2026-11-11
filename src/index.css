@@ -4,13 +4,23 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   background: var(--color-bg-secondary);
   color: var(--color-text-secondary);
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo',
-    'Malgun Gothic', sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+}
+
+/* 레퍼런스의 형광 옐로는 텍스트를 드래그했을 때만 살짝 등장합니다 */
+::selection {
+  color: #0A0A0A;
+  background: var(--color-highlight);
 }
 
 a {
@@ -19,4 +29,32 @@ a {
 
 a:hover {
   color: var(--color-link-hover);
+}
+
+/* 키보드로 이동할 때만 포커스 링 표시 */
+:focus-visible {
+  outline: 2px solid var(--color-accent-text);
+  outline-offset: 3px;
+}
+
+/* 테마 전환: 원형으로 퍼지는 View Transition (theme-toggle.jsx에서 실행) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* 움직임 줄이기 설정을 켠 사용자에게는 애니메이션을 끕니다 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

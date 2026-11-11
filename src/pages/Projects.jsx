@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Stack } from '@mui/material';
+import { Alert, Box, Button, Container, Stack } from '@mui/material';
 import SectionHeading from '../components/contact/section-heading';
 import ProjectGrid from '../components/projects/project-grid';
 import { useProjects } from '../hooks/use-projects';
@@ -14,10 +14,10 @@ function Projects() {
   const { projects, isLoading, error, isConfigured, onRetry } = useProjects();
 
   return (
-    <Box component="section" id="projects">
+    <Container component="section" id="projects" maxWidth="lg" sx={{ px: { xs: 2, sm: 3 }, py: { xs: 6, md: 10 } }}>
       <Stack spacing={{ xs: 3, md: 4 }}>
         <Box>
-          <SectionHeading eyebrow="PROJECTS" title="작업한 프로젝트" />
+          <SectionHeading label="ALL WORKS" title="작업한 프로젝트" />
           <Box sx={{ mt: 1.5, color: 'var(--color-text-muted)', lineHeight: 1.6 }}>
             직접 기획하고 개발해 배포한 프로젝트들이에요. 카드를 눌러 자세히 볼 수 있어요.
           </Box>
@@ -51,7 +51,7 @@ function Projects() {
 
         <ProjectGrid projects={ projects } isLoading={ isLoading } />
       </Stack>
-    </Box>
+    </Container>
   );
 }
 
