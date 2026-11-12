@@ -219,7 +219,7 @@ function SkillsSection() {
       index="02"
       label="SKILL TREE"
       title={ '디자인과 코드,\n두 개의 언어' }
-      description="숙련도 막대 대신, 각 기술로 어려움 없이 해낼 수 있는 일을 적었어요. 스크롤하면 기술이 하나씩 넘어가요."
+      description="디자인과 코드, 각 기술로 어려움 없이 해낼 수 있는 일을 정리했어요. 스크롤을 내리면 기술이 하나씩 넘어가요."
     >
       <Box ref={ sectionRef } sx={{ position: 'relative' }}>
         <Box
