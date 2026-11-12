@@ -1,3 +1,4 @@
+import { NAV_HEIGHT, VIEWPORT_BELOW_NAV } from '../common/layout-constants';
 import { Box, ButtonBase } from '@mui/material';
 import PageSection from '../common/page-section';
 import SkillIcon from './skill-icon';
@@ -8,8 +9,6 @@ import { useScrollSteps } from '../../hooks/use-scroll-steps';
 const ALL_SKILLS = SKILL_GROUPS.flatMap((group) => group.skills.map((skill) => ({ ...skill, groupLabel: group.label })));
 const SKILL_COUNT = ALL_SKILLS.length;
 
-/** 상단 바 높이 (모바일은 메뉴가 두 줄) — 이 아래에 무대가 고정됩니다 */
-const NAV_HEIGHT = { xs: 86, sm: 72 };
 /** 오른쪽 목록 한 줄의 높이 */
 const ITEM_HEIGHT = { xs: 52, md: 104 };
 
@@ -236,7 +235,7 @@ function SkillsSection() {
             ...(isPinned && {
               position: 'sticky',
               top: { xs: NAV_HEIGHT.xs, sm: NAV_HEIGHT.sm },
-              height: { xs: `calc(100svh - ${NAV_HEIGHT.xs}px)`, sm: `calc(100svh - ${NAV_HEIGHT.sm}px)` },
+              height: VIEWPORT_BELOW_NAV,
             }),
           }}
         >

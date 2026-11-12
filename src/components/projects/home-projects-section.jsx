@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import { NAV_HEIGHT, VIEWPORT_BELOW_NAV } from '../common/layout-constants';
 import { Box, Button, ButtonBase, Skeleton, Stack } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useProjects } from '../../hooks/use-projects';
@@ -12,8 +13,6 @@ import ProjectSlideCard from './project-slide-card';
 import ProjectDetailDialog from './project-detail-dialog';
 import { SLIDE_SIZE_SX } from './slide-size';
 
-/** 상단 바 높이 (모바일은 메뉴가 두 줄) — 이 아래에 섹션이 고정됩니다 */
-const NAV_HEIGHT = { xs: 86, sm: 72 };
 const SKELETON_COUNT = 3;
 
 /** 마지막 카드: 전체 프로젝트 페이지로 이동 */
@@ -26,7 +25,7 @@ function ViewAllSlide({ onFocus }) {
       sx={{
         ...SLIDE_SIZE_SX,
         aspectRatio: { xs: '3 / 4', md: '3 / 4' },
-        width: { xs: '56vw', md: 'auto' },
+        width: { xs: '56vw', sm: '40vw', md: 'auto' },
         borderRadius: { xs: 3, md: 4 },
         border: '1px solid var(--color-border-default)',
         color: 'var(--color-text-primary)',
@@ -92,10 +91,12 @@ function HomeProjectsSection() {
           flexDirection: 'column',
           gap: { xs: 3, md: 4 },
           py: { xs: 4, md: 6 },
+          // 모바일·태블릿: 내용을 화면 세로 가운데에 모아 빈 틈이 생기지 않게 합니다
+          justifyContent: { xs: 'center', md: 'flex-start' },
           ...(isPinned && {
             position: 'sticky',
             top: { xs: NAV_HEIGHT.xs, sm: NAV_HEIGHT.sm },
-            height: { xs: `calc(100svh - ${NAV_HEIGHT.xs}px)`, sm: `calc(100svh - ${NAV_HEIGHT.sm}px)` },
+            height: VIEWPORT_BELOW_NAV,
           }),
         }}
       >
@@ -134,7 +135,7 @@ function HomeProjectsSection() {
             <Box
               sx={{
                 // 고정 영역의 남은 높이를 카드 줄이 모두 차지합니다 (모바일은 카드가 세로 가운데에 놓임)
-                flex: isPinned ? 1 : 'none',
+                flex: isPinned ? { xs: 'none', md: 1 } : 'none',
                 minHeight: 0,
                 mr: 'calc(50% - 50vw)',
                 ...(isPinned

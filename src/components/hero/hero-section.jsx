@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
-import { Box, Container } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import { Box, Container, useMediaQuery } from '@mui/material';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { useScrollProgress } from '../../hooks/use-scroll-progress';
 import { INTRO_DURATION_MS, SHOULD_SHOW_INTRO } from '../common/intro-state';
+import { HERO_MEDIA, HERO_OBJECT_SIZE, HERO_QUERY, VIEWPORT_BELOW_NAV } from '../common/layout-constants';
+import { useFitScale } from '../../hooks/use-fit-scale';
 import HeroObject from './hero-object';
 
 /** 글자 단위로 올라올 헤드라인 */
@@ -52,14 +54,22 @@ const fadeInSx = (isShown, delayMs) => ({
 });
 
 /** 헤드라인: 줄마다 마스크 안에서 글자가 하나씩 튀어 올라옵니다 */
-function Headline({ isShown }) {
+function Headline({ isShown, isCompact = false }) {
   return (
     <Box
       component="h1"
       aria-label={ `${HEADLINE_LINES.join(' ')}.` }
       sx={{
         m: 0,
-        fontSize: { xs: '2.375rem', sm: '3.5rem', md: '4.75rem' },
+        // 데스크톱: 가장 큰 제목(h1급) / 태블릿: 비례 축소 / 모바일: 한 단계 작은 제목(h2급)
+        // 모바일은 화면 폭에 비례(vw)해서 320px 화면에서도 한 줄이 줄바꿈되지 않게 합니다
+        fontSize: '4.75rem',
+        [HERO_MEDIA.tablet]: { fontSize: 'clamp(2.75rem, 6.2vw, 4rem)' },
+        // 큰 제목은 줄 사이가 너무 벌어지지 않게(1.1), 작은 화면에서는 조금 더 여유 있게(1.18)
+        [HERO_MEDIA.mobile]: { fontSize: 'clamp(1.75rem, 10vw, 2.5rem)', lineHeight: 1.18 },
+        [HERO_MEDIA.landscapeCompact]: { fontSize: '2rem', lineHeight: 1.15 },
+        // 좌우 배치(태블릿 가로)에서는 화면 절반 폭에 두 줄로 들어가도록 줄입니다
+        ...(isCompact && { [HERO_MEDIA.tablet]: { fontSize: 'clamp(2.25rem, 4.6vw, 3.5rem)' } }),
         fontWeight: 800,
         lineHeight: 1.1,
         letterSpacing: '-0.045em',
@@ -117,12 +127,28 @@ function Headline({ isShown }) {
  * 스크롤하면 글은 흐려지고 레이어는 더 벌어지며, 다음 섹션이 그 위를 덮습니다. (Home에서 sticky로 고정)
  * 움직임 줄이기 설정이 켜져 있으면 바로 완성된 화면을 보여줍니다.
  *
+ * 반응형 배치 (useMediaQuery로 화면 구간을 판단하고, 크기·여백은 sx로 조정)
+ * - desktop (1200px~): 제목은 왼쪽 위, 오브제는 오른쪽 아래에 고정 배율로 여유 있게
+ * - stack (모바일 ~767px, 태블릿 세로): 제목 → 오브제 → 스크롤 안내를 세로로 쌓기
+ * - side (태블릿 가로, 휴대폰 가로): 제목과 오브제를 좌우로 나란히
+ * 모바일·태블릿에서는 오브제가 남은 공간에 맞춰 크기가 줄어들어, 제목과 겹치거나 화면 밖으로 넘치지 않습니다.
+ * (Hero는 화면에 고정된 채 다음 섹션이 덮고 올라오므로, 화면 높이 안에 모두 들어와야 합니다)
+ *
  * Example usage:
  * <HeroSection />
  */
 function HeroSection() {
   const [isShown, setIsShown] = useState(() => prefersReducedMotion());
   const scrollRef = useScrollProgress('element');
+  const artRef = useRef(null);
+
+  // 화면 구간 판단 (noSsr: 첫 화면부터 올바른 배치로 그려 깜빡임 방지)
+  const isDesktop = useMediaQuery(HERO_QUERY.desktop, { noSsr: true });
+  const isTablet = useMediaQuery(HERO_QUERY.tablet, { noSsr: true });
+  const isLandscape = useMediaQuery(HERO_QUERY.landscape, { noSsr: true });
+  const isLandscapeCompact = useMediaQuery(HERO_QUERY.landscapeCompact, { noSsr: true });
+  const layout = isLandscapeCompact || (isTablet && isLandscape) ? 'side' : isDesktop ? 'desktop' : 'stack';
+  const objectScale = useFitScale(artRef, { ...HERO_OBJECT_SIZE, min: 0.3, max: layout === 'side' ? 0.8 : 0.9 }, layout !== 'desktop');
 
   // 첫 방문 인트로가 걷힐 즈음, 아니면 첫 화면이 그려진 직후 등장 연출을 시작합니다
   useEffect(() => {
@@ -179,13 +205,30 @@ function HeroSection() {
         maxWidth="lg"
         sx={{
           px: { xs: 2, sm: 3 },
-          minHeight: { xs: 'calc(100svh - 104px)', sm: 'calc(100svh - 72px)' },
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          gap: 4,
-          py: { xs: 5, md: 8 },
+          minHeight: VIEWPORT_BELOW_NAV,
+          // 모바일·태블릿은 화면 높이에 딱 맞춰 넘치지 않게 합니다 (데스크톱은 여유 있게 최소 높이만)
+          height: layout === 'desktop' ? 'auto' : VIEWPORT_BELOW_NAV,
           position: 'relative',
+          // 화면 크기에 따른 여백: 모바일 좁게 → 데스크톱 넉넉하게
+          py: 8,
+          [HERO_MEDIA.tablet]: { py: 6 },
+          [HERO_MEDIA.mobile]: { py: 4 },
+          [HERO_MEDIA.landscapeCompact]: { py: 2.5 },
+          ...(layout === 'side'
+            ? {
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gridTemplateRows: '1fr auto',
+              gridTemplateAreas: '"text art" ". scroll"',
+              columnGap: 3,
+              rowGap: 1,
+            }
+            : {
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              gap: layout === 'desktop' ? 4 : 2.5,
+            }),
           // 스크롤 연동: 내려갈수록 살짝 작아지고 흐려집니다
           transform: 'translateY(calc(var(--progress) * -6%)) scale(calc(1 - var(--progress) * 0.08))',
           opacity: 'calc(1 - var(--progress) * 0.9)',
@@ -194,18 +237,23 @@ function HeroSection() {
           '@media (prefers-reduced-motion: reduce)': { transform: 'none', filter: 'none', opacity: 1 },
         }}
       >
-        <HeroObject isShown={ isShown } />
+        {layout === 'desktop' && <HeroObject isShown={ isShown } />}
 
-        {/* 왼쪽 위: 태그 + 헤드라인 */}
-        <Box sx={{ position: 'relative', zIndex: 1 }}>
+        {/* 태그 + 헤드라인 */}
+        {/* 좌우 배치(side)에서만 세로 가운데 정렬 — 세로 쌓기에서는 왼쪽 정렬 그대로 */}
+        <Box sx={{ position: 'relative', zIndex: 1, gridArea: 'text', alignSelf: layout === 'side' ? 'center' : 'auto' }}>
           <Box
             sx={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: 1.25,
-              mb: { xs: 2, md: 3 },
+              // 서브 타이틀(태그)도 제목에 비례해 줄이고, 제목과의 간격도 함께 조정합니다
+              mb: 3,
+              fontSize: '0.8125rem',
+              [HERO_MEDIA.tablet]: { mb: 2.5, fontSize: '0.78rem' },
+              [HERO_MEDIA.mobile]: { mb: 1.75, fontSize: '0.72rem' },
+              [HERO_MEDIA.landscapeCompact]: { mb: 1.25 },
               fontFamily: 'var(--font-code)',
-              fontSize: { xs: '0.75rem', md: '0.8125rem' },
               letterSpacing: '0.06em',
               color: 'var(--hero-muted)',
               ...fadeInSx(isShown, 0),
@@ -229,11 +277,18 @@ function HeroSection() {
             />
             {'// DESIGN × CODE'}
           </Box>
-          <Headline isShown={ isShown } />
+          <Headline isShown={ isShown } isCompact={ layout === 'side' } />
         </Box>
 
+        {/* 모바일·태블릿: 오브제가 놓일 영역 — 남은 공간을 모두 차지하고, 오브제는 이 크기에 맞춰 줄어듭니다 */}
+        {layout !== 'desktop' && (
+          <Box ref={ artRef } sx={{ gridArea: 'art', position: 'relative', flex: 1, minHeight: 0, minWidth: 0 }}>
+            <HeroObject isShown={ isShown } scale={ objectScale } />
+          </Box>
+        )}
+
         {/* 아래: 스크롤 안내(오른쪽) — 이름은 상단 바에 있어 Hero에서는 반복하지 않습니다 */}
-        <Box sx={{ position: 'relative', zIndex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+        <Box sx={{ position: 'relative', zIndex: 1, gridArea: 'scroll', display: 'flex', justifyContent: 'flex-end' }}>
           <Box
             aria-hidden
             sx={{

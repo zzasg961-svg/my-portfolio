@@ -17,7 +17,8 @@ function ContactInfoList({ items }) {
         <Box
           component="li"
           key={label}
-          sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
+          // 링크가 있으면 줄 전체(아이콘 + 글자)를 눌러도 이동하도록 position: relative 기준을 둡니다
+          sx={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 2 }}
         >
           <Box
             sx={{
@@ -47,6 +48,8 @@ function ContactInfoList({ items }) {
                   color: 'var(--color-text-primary)',
                   wordBreak: 'break-all',
                   '&:hover': { color: 'var(--color-text-primary)' },
+                  // 눌리는 영역을 줄 전체(높이 44px)로 넓힙니다
+                  '&::after': { content: '""', position: 'absolute', inset: 0 },
                 }}
               >
                 {value}

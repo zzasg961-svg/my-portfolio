@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { AppBar, Box, Button, Container, Stack, Toolbar } from '@mui/material'
 import { useScrollProgress } from '../hooks/use-scroll-progress'
+import { useActiveSection } from '../hooks/use-active-section'
 import RollText from './common/roll-text'
 import ThemeToggle from './common/theme-toggle'
 
@@ -12,23 +13,26 @@ const NAV_ITEMS = [
   { label: 'Projects', scrollTo: 'projects' },
 ]
 
+/** 스크롤 위치를 추적할 홈 화면 섹션 (위에서부터 순서대로). Contact는 오른쪽 빨간 버튼이 따로 있어 메뉴 점은 표시하지 않습니다 */
+const TRACKED_SECTION_IDS = [...NAV_ITEMS.map((item) => item.scrollTo), 'contact']
+
 /**
  * Navbar 컴포넌트
  * 상단 고정 바입니다. 왼쪽 로고, 가운데 메뉴, 오른쪽 테마 전환·Contact 버튼으로 구성됩니다.
  * 바 아래쪽 빨간 선이 페이지 스크롤 진행도를 보여줍니다.
  * 모바일에서는 로고·버튼 한 줄, 메뉴 한 줄로 나뉩니다.
+ * 홈 화면에서는 스크롤 위치를 따라가며 지금 보고 있는 섹션의 메뉴에 빨간 점을 표시합니다.
  */
 function Navbar() {
   const location = useLocation()
-  const currentScrollTo = location.state?.scrollTo
+  const isHome = location.pathname === '/'
   const progressRef = useScrollProgress('page')
+  // 홈 화면에서 지금 보고 있는 섹션 (메뉴를 눌러 이동할 때도, 직접 스크롤할 때도 따라갑니다)
+  const activeSectionId = useActiveSection(TRACKED_SECTION_IDS, isHome)
 
   const isItemActive = (item) => {
     if (item.scrollTo === 'projects' && location.pathname === '/projects') return true
-    if (location.pathname !== '/') return false
-    // 처음 접속했을 때(이동 기록 없음)는 Home을 활성화
-    if (item.scrollTo === 'hero') return !currentScrollTo || currentScrollTo === 'hero'
-    return currentScrollTo === item.scrollTo
+    return isHome && activeSectionId === item.scrollTo
   }
 
   return (
@@ -47,12 +51,14 @@ function Navbar() {
           disableGutters
           sx={{
             minHeight: { xs: 'auto', sm: 72 },
-            py: { xs: 1, sm: 0 },
+            // 모바일: 메뉴 터치 영역을 키운 만큼 위아래 여백은 줄입니다
+            pt: { xs: 1, sm: 0 },
+            pb: { xs: 0.25, sm: 0 },
             display: 'grid',
             gridTemplateColumns: { xs: '1fr auto', sm: 'auto 1fr auto' },
             gridTemplateAreas: { xs: '"logo actions" "nav nav"', sm: '"logo nav actions"' },
             alignItems: 'center',
-            rowGap: 0.5,
+            rowGap: 0,
             columnGap: 2,
           }}
         >
@@ -100,6 +106,8 @@ function Navbar() {
                   sx={{
                     position: 'relative',
                     minWidth: 0,
+                    // 모바일에서 손가락으로 누르기 편하도록 높이 40px 확보
+                    minHeight: { xs: 40, sm: 'auto' },
                     px: { xs: 1, sm: 1.75 },
                     borderRadius: 999,
                     fontFamily: 'var(--font-display)',
@@ -112,7 +120,7 @@ function Navbar() {
                     '&::after': {
                       content: '""',
                       position: 'absolute',
-                      bottom: -3,
+                      bottom: { xs: 2, sm: -3 },
                       left: '50%',
                       width: 4,
                       height: 4,

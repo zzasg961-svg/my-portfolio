@@ -243,23 +243,31 @@ const LAYERS = [
  *
  * Props:
  * @param {boolean} isShown - 등장 연출 시작 여부 [Required]
+ * @param {number} scale - 배율. 주면 부모 영역 한가운데에 이 배율로 놓입니다 (모바일·태블릿).
+ *   없으면 데스크톱 배치(Hero 오른쪽 아래, 화면 폭별 고정 배율)를 씁니다. [Optional]
  *
  * Example usage:
  * <HeroObject isShown={isShown} />
+ * <HeroObject isShown={isShown} scale={0.6} />
  */
-function HeroObject({ isShown }) {
+/** 데스크톱 배치: Hero 오른쪽 아래, 화면 폭별 고정 배율 */
+const DESKTOP_PLACEMENT_SX = {
+  // 노트북 화면(lg)에서는 제목과 겹치지 않도록 조금 더 오른쪽 아래, 큰 화면(xl)에서 원래 자리
+  top: { lg: '57%', xl: '54%' },
+  left: { lg: '68%', xl: '64%' },
+  scale: { lg: '0.9', xl: '1.05' },
+};
+
+function HeroObject({ isShown, scale }) {
   return (
     <Box
       aria-hidden
       sx={{
         position: 'absolute',
-        // 노트북 화면(lg)에서는 제목과 겹치지 않도록 조금 더 오른쪽 아래, 큰 화면(xl)에서 원래 자리
-        top: { xs: '52%', md: '57%', lg: '57%', xl: '54%' },
-        left: { xs: '50%', md: '67%', lg: '68%', xl: '64%' },
         width: 640,
         height: 520,
         translate: '-50% -50%',
-        scale: { xs: '0.54', sm: '0.78', md: '0.76', lg: '0.9', xl: '1.05' },
+        ...(scale === undefined ? DESKTOP_PLACEMENT_SX : { top: '50%', left: '50%', scale: String(scale) }),
         pointerEvents: 'none',
         zIndex: 0,
       }}
