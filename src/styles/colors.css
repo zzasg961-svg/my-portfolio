@@ -48,6 +48,15 @@
   --hero-blob-1: rgba(232, 35, 35, 0.10);
   --hero-blob-2: rgba(255, 237, 237, 0.9);    /* #FFEDED */
   --hero-blob-3: rgba(232, 35, 35, 0.07);
+  /* Hero 3D 레이어 오브제 (디자인 → 레이아웃 → 코드) */
+  --hero-layer-bg: #FFFFFF;
+  --hero-layer-border: rgba(0, 0, 0, 0.16);
+  --hero-layer-bar: #0A0A0A;
+  --hero-layer-bar-muted: #D9D9D9;
+  --hero-layer-shadow: 0 50px 80px rgba(10, 10, 10, 0.22);
+  --hero-design-shadow: 0 28px 56px rgba(10, 10, 10, 0.16), 0 2px 6px rgba(10, 10, 10, 0.06);
+  --hero-grid-line: rgba(232, 35, 35, 0.7);
+  --hero-grid-fill: rgba(232, 35, 35, 0.03);
   --color-nav-bg: rgba(255, 255, 255, 0.72);
   --color-warm: #ECE8DF;
 
@@ -101,6 +110,14 @@
   --hero-blob-1: rgba(232, 35, 35, 0.28);
   --hero-blob-2: rgba(38, 38, 38, 0.9);
   --hero-blob-3: rgba(250, 67, 67, 0.16);
+  --hero-layer-bg: #1D1D1D;
+  --hero-layer-border: rgba(255, 255, 255, 0.12);
+  --hero-layer-bar: #F6F6F6;
+  --hero-layer-bar-muted: #333333;
+  --hero-layer-shadow: 0 50px 80px rgba(0, 0, 0, 0.7);
+  --hero-design-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+  --hero-grid-line: rgba(250, 67, 67, 0.6);
+  --hero-grid-fill: rgba(250, 67, 67, 0.06);
   --color-nav-bg: rgba(10, 10, 10, 0.72);
 
   --color-text-primary: #F6F6F6;

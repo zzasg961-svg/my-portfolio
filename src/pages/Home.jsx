@@ -30,7 +30,8 @@ function Home() {
           borderTopLeftRadius: { xs: 24, md: 48 },
           borderTopRightRadius: { xs: 24, md: 48 },
           boxShadow: 'var(--shadow-curtain)',
-          overflow: 'hidden',
+          // hidden 대신 clip: 둥근 모서리 밖은 잘라 내면서도, Projects 섹션의 화면 고정(sticky)이 동작하도록 합니다
+          overflow: 'clip',
         }}
       >
         <ScrollStatement />
