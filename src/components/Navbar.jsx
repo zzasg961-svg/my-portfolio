@@ -108,10 +108,11 @@ function Navbar() {
                     color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                     '&:hover': { color: 'var(--color-text-primary)', bgcolor: 'transparent' },
                     // 활성 메뉴 아래 빨간 점
+                    // 글자(특히 Projects의 j처럼 아래로 내려오는 글자)와 닿지 않도록 버튼 아래쪽에 충분히 띄웁니다
                     '&::after': {
                       content: '""',
                       position: 'absolute',
-                      bottom: 2,
+                      bottom: -3,
                       left: '50%',
                       width: 4,
                       height: 4,
