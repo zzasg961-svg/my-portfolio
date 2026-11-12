@@ -158,7 +158,8 @@ function DesignLayer() {
       {/* 브라우저 상단 바 */}
       <Box sx={{ position: 'absolute', top: 0, left: 0, right: 0, height: 36, borderBottom: '1px solid var(--hero-layer-border)', display: 'flex', alignItems: 'center', gap: '6px', px: '14px' }}>
         {[0, 1, 2].map((dot) => (
-          <Box key={ dot } sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: dot === 0 ? 'var(--hero-accent)' : 'var(--hero-layer-bar-muted)' }} />
+          // 제목 끝의 빨간 마침표와 겹쳐 보이지 않도록 창 버튼 점은 모두 회색으로 둡니다
+          <Box key={ dot } sx={{ width: 9, height: 9, borderRadius: '50%', bgcolor: 'var(--hero-layer-bar-muted)' }} />
         ))}
       </Box>
 
@@ -252,12 +253,13 @@ function HeroObject({ isShown }) {
       aria-hidden
       sx={{
         position: 'absolute',
-        top: { xs: '52%', md: '57%', lg: '53%' },
-        left: { xs: '50%', md: '67%', lg: '64%' },
+        // 노트북 화면(lg)에서는 제목과 겹치지 않도록 조금 더 오른쪽 아래, 큰 화면(xl)에서 원래 자리
+        top: { xs: '52%', md: '57%', lg: '57%', xl: '54%' },
+        left: { xs: '50%', md: '67%', lg: '68%', xl: '64%' },
         width: 640,
         height: 520,
         translate: '-50% -50%',
-        scale: { xs: '0.54', sm: '0.78', md: '0.76', lg: '1' },
+        scale: { xs: '0.54', sm: '0.78', md: '0.76', lg: '0.9', xl: '1.05' },
         pointerEvents: 'none',
         zIndex: 0,
       }}
